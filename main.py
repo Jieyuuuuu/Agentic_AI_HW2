@@ -6,13 +6,13 @@ def main():
     # Load environment variables
     load_dotenv()
     
-    if not os.environ.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY") == "your_gemini_api_key_here":
-        print("ERROR: Please set your GEMINI_API_KEY in the .env file.")
+    if not os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPENROUTER_API_KEY") == "your_openrouter_api_key_here":
+        print("ERROR: Please set your OPENROUTER_API_KEY in the .env file.")
         return
 
     # Initialize the agent
-    # Using gemini-2.5-flash-lite as requested
-    agent = ReActAgent(model_name="gemini-2.5-flash-lite")
+    # Using OpenRouter's gemini-2.5-flash
+    agent = ReActAgent(model_name="google/gemini-2.5-flash")
     
     # Task 1: Planning & Quantitative Reasoning
     task1 = "What fraction of Japan's population is Taiwan's population as of 2025?"

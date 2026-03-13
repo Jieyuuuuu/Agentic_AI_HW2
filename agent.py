@@ -1,7 +1,6 @@
 import os
 import re
-from google import genai
-from google.genai import types
+from openai import OpenAI
 from tools import search_web
 
 # Define the System Prompt with a Few-Shot Example (One-shot)
@@ -33,8 +32,11 @@ Instructions:
 """
 
 class ReActAgent:
-    def __init__(self, model_name="gemini-2.5-flash-lite"):
-        self.client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+    def __init__(self, model_name="google/gemini-2.5-flash"):
+        self.client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=os.environ.get("OPENROUTER_API_KEY"),
+        )
         self.model_name = model_name
         self.system_prompt = SYSTEM_PROMPT
         self.max_steps = 5
@@ -52,17 +54,18 @@ class ReActAgent:
             print(f"\n--- Step {step} ---")
             
             # 1. Call LLM
-            # We use stop_sequences to prevent the LLM from generating the Observation itself
-            response = self.client.models.generate_content(
+            # We use stop to prevent the LLM from generating the Observation itself
+            response = self.client.chat.completions.create(
                 model=self.model_name,
-                contents=prompt_history,
-                config=types.GenerateContentConfig(
-                    stop_sequences=["Observation:"],
-                    temperature=0.2, # Low temperature for more deterministic reasoning
-                )
+                messages=[
+                    {"role": "user", "content": prompt_history}
+                ],
+                stop=["Observation:"],
+                temperature=0.2, # Low temperature for more deterministic reasoning
+                max_tokens=2000, # Limit generation to prevent 402 Insufficient Credit errors
             )
             
-            generation = response.text.strip()
+            generation = response.choices[0].message.content.strip()
             print(generation)
             
             # Update history with the LLM's generation
