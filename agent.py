@@ -29,6 +29,11 @@ Final Answer: The capital of France is Paris, and its population is estimated to
 Instructions:
 - If a search fails or doesn't return the information you need, Reflect on why it failed and try a different search query.
 - Never fake or hallucinate Observations. Always Output Action: Search[query] and stop.
+- For comparison questions, do not over-focus on only one item. Gather key specs for item A and item B as early as possible.
+- For phone display comparisons, prioritize these fields: display type, screen size, resolution, refresh rate.
+- Use efficient search queries that include both targets when possible (example: "iPhone 15 vs Samsung S24 display refresh rate resolution").
+- You only have 5 steps. By step 4, if you already have enough evidence for both sides, provide Final Answer instead of doing extra searches.
+- If one minor field is missing at the end, provide the best evidence-based comparison and clearly state the missing field.
 """
 
 class ReActAgent:
